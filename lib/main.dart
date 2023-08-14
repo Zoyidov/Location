@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:login_screen_homework/data/network/repositories/repository.dart';
 import 'package:login_screen_homework/data/network/service/api_service.dart';
 import 'package:login_screen_homework/data/providers/address_call_provider.dart';
+import 'package:login_screen_homework/data/providers/locations_povider.dart';
 import 'package:login_screen_homework/ui/get_location/get_location.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => LocationProvider()),
         ChangeNotifierProvider(create: (context) => AddressProvider()),
         ChangeNotifierProvider(
             create: (context) => AddressCallProvider(apiService: ApiService())),

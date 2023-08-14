@@ -17,7 +17,7 @@ class DatabaseHelper {
           name TEXT,
           latitude REAL,
           longitude REAL,
-          address TEXT
+          title TEXT
         )
       ''');
       },
@@ -26,10 +26,7 @@ class DatabaseHelper {
 
 
   static Future<void> insertAddress(Address address) async {
-    await _database.insert('addresses', {
-      'name': address.name,
-      'address': address.address,
-    });
+    await _database.insert('addresses', address.toJson());
   }
 
   static Future<List<Address>> getAddresses() async {
@@ -37,11 +34,7 @@ class DatabaseHelper {
     final List<Map<String, dynamic>> maps = await db.query('addresses');
 
     return List.generate(maps.length, (i) {
-      return Address(
-        id: maps[i]['id'],
-        name: maps[i]['name'],
-        address: maps[i]['address'],
-      );
+      return Address.fromJson(maps[i]);
     });
   }
 

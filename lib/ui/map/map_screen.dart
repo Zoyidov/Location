@@ -98,7 +98,6 @@ class _MapScreenState extends State<MapScreen> {
                 bottom: 25,
               ),
               mapType: _selectedMapType,
-              mapToolbarEnabled: true,
               myLocationEnabled: true,
               myLocationButtonEnabled: myLocationButtonEnabled,
               onMapCreated: (GoogleMapController controller) {

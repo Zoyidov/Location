@@ -33,7 +33,7 @@ class AddressProvider extends ChangeNotifier {
 
   Future<void> deleteAddress(int index) async {
     final addressToDelete = _addresses[index];
-    await DatabaseHelper.deleteAddress(addressToDelete.id);
+    await DatabaseHelper.deleteAddress(addressToDelete.id!);
     await loadAddresses();
   }
 
