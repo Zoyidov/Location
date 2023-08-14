@@ -1,46 +1,42 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:login_screen_homework/data/providers/address_call_provider.dart';
+import 'package:login_screen_homework/data/providers/kind_of_address_provider.dart';
 import 'package:login_screen_homework/utils/constants.dart';
 import 'package:provider/provider.dart';
 
-import '../../../data/providers/address_call_provider.dart';
 
-class KindOfAddress extends StatefulWidget {
+class KindOfAddress extends StatelessWidget {
   const KindOfAddress({Key? key}) : super(key: key);
 
   @override
-  State<KindOfAddress> createState() => _KindOfAddressState();
-}
-
-class _KindOfAddressState extends State<KindOfAddress> {
-  int selectedIndex = 0;
-
-  @override
   Widget build(BuildContext context) {
+    final selectedKindProvider = Provider.of<SelectedKindProvider>(context);
+    int selectedIndex = selectedKindProvider.selectedIndex;
+
     return PopupMenuButton<int>(
       color: Colors.black.withOpacity(0.8),
       icon: Container(
         height: 50,
         width: 50,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            color: Colors.black.withOpacity(0.8)),
+          borderRadius: BorderRadius.circular(50),
+          color: Colors.black.withOpacity(0.8),
+        ),
         child: selectedIndex == 0
             ? const Icon(CupertinoIcons.home, color: Colors.white, size: 18)
             : selectedIndex == 1
-                ? const Icon(Icons.directions_subway_outlined,
-                    color: Colors.blueAccent, size: 20)
-                : selectedIndex == 2
-                    ? const Icon(CupertinoIcons.location_fill,
-                        color: Colors.amber, size: 20)
-                    : const Icon(Icons.line_axis,
-                        color: Colors.green, size: 20),
+            ? const Icon(Icons.directions_subway_outlined,
+            color: Colors.blueAccent, size: 20)
+            : selectedIndex == 2
+            ? const Icon(CupertinoIcons.location_fill,
+            color: Colors.amber, size: 20)
+            : const Icon(Icons.line_axis,
+            color: Colors.green, size: 20),
       ),
       initialValue: selectedIndex,
       onSelected: (int index) {
-        setState(() {
-          selectedIndex = index;
-        });
+        selectedKindProvider.selectedIndex = index;
         String selectedValue = kindList[index];
         context.read<AddressCallProvider>().updateKind(selectedValue);
       },

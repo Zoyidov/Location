@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:login_screen_homework/data/providers/address_call_provider.dart';
 import 'package:login_screen_homework/data/providers/api_provider.dart';
+import 'package:login_screen_homework/data/providers/locations_povider.dart';
 import 'package:login_screen_homework/ui/map/widget/current_address_field.dart';
 import 'package:login_screen_homework/ui/map/widget/kind_of_address.dart';
 import 'package:login_screen_homework/ui/map/widget/language_of_address.dart';
@@ -31,6 +32,8 @@ class _MapScreenState extends State<MapScreen> {
   late CameraPosition initialCameraPosition;
   late CameraPosition currentCameraPosition;
   late LatLng _selectedLocation;
+  late Marker _selectedLocationMarker;
+
   String _selectedAddress = '';
   bool myLocationButtonEnabled = true;
   FloatingActionButtonLocation floatingActionButtonLocation =
@@ -47,6 +50,10 @@ class _MapScreenState extends State<MapScreen> {
     _selectedLocation = widget.latLong;
     initialCameraPosition = CameraPosition(target: _selectedLocation, zoom: 15);
     currentCameraPosition = initialCameraPosition;
+    _selectedLocationMarker = Marker(
+      markerId: const MarkerId('selectedLocation'),
+      position: widget.latLong,
+    );
   }
 
   void _fetchAddress(LatLng location) async {
@@ -103,14 +110,25 @@ class _MapScreenState extends State<MapScreen> {
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
               },
+              onCameraMove: (CameraPosition position) {
+                _selectedLocation = position.target;
+                _selectedLocationMarker = _selectedLocationMarker.copyWith(
+                  positionParam: _selectedLocation,
+                );
+              },
               onTap: (LatLng location) {
                 setState(() {
                   currentCameraPosition = CameraPosition(
-                      target: location, zoom: currentCameraPosition.zoom);
+                    target: location,
+                    zoom: currentCameraPosition.zoom,
+                  );
                   context.read<AddressCallProvider>().getAddressByLatLong(
                         latLng: currentCameraPosition.target,
                       );
                   _selectedLocation = location;
+                  context
+                      .read<LocationProvider>()
+                      .updateSelectedLocation(location);
                 });
                 _fetchAddress(location);
               },

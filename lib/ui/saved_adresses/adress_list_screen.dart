@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:login_screen_homework/ui/map/map_screen.dart';
+import 'package:login_screen_homework/ui/saved_address_mapscreen/saved_address_mapscreen.dart';
 import 'package:login_screen_homework/utils/icons.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import '../../data/providers/address_call_provider.dart';
 import '../../data/providers/api_provider.dart';
 
 class AddressListScreen extends StatefulWidget {
@@ -86,6 +84,14 @@ class _AddressListScreenState extends State<AddressListScreen> {
                   ),
                   key: Key(index.toString()),
                   child: ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SavedAddressMapScreen(address: address),
+                        ),
+                      );
+                    },
                     title: Row(
                       children: [
                         Text(

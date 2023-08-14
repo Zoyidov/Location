@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:login_screen_homework/data/providers/language_provider.dart';
 import 'package:login_screen_homework/utils/constants.dart';
 import 'package:login_screen_homework/utils/icons.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/providers/address_call_provider.dart';
 
 class LanguageOfAddress extends StatefulWidget {
@@ -16,6 +18,9 @@ class _LanguageOfAddressState extends State<LanguageOfAddress> {
 
   @override
   Widget build(BuildContext context) {
+    final languageSelectionProvider =
+    Provider.of<LanguageSelectionProvider>(context);
+    String selectedLang = languageSelectionProvider.selectedLang;
     return PopupMenuButton<String>(
       color: Colors.black.withOpacity(0.8),
       icon: Container(
@@ -30,25 +35,27 @@ class _LanguageOfAddressState extends State<LanguageOfAddress> {
             selectedLang == langList[0]
                 ? AppImages.uz
                 : selectedLang == langList[1]
-                    ? AppImages.rus
-                    : selectedLang == langList[2]
-                        ? AppImages.usa
-                        : AppImages.turk,
+                ? AppImages.rus
+                : selectedLang == langList[2]
+                ? AppImages.usa
+                : AppImages.turk,
             fit: BoxFit.cover,
           ),
         ),
       ),
       initialValue: selectedLang,
-      onSelected: (String value) {
-        setState(() {
+      onSelected: (String value){
+        setState(() async {
           selectedLang = value;
+          languageSelectionProvider.updateSelectedLang(value);
+          context.read<AddressCallProvider>().updateLang(selectedLang);
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('selectedLanguage', value);
         });
-
-        context.read<AddressCallProvider>().updateLang(selectedLang);
       },
       itemBuilder: (BuildContext context) {
         return langList.asMap().entries.map<PopupMenuEntry<String>>(
-          (MapEntry<int, String> entry) {
+              (MapEntry<int, String> entry) {
             int index = entry.key;
             String value = entry.value;
             String text;
@@ -60,7 +67,7 @@ class _LanguageOfAddressState extends State<LanguageOfAddress> {
                 text = 'English';
                 break;
               case 3:
-                text = 'Turkish';
+                text = 'Türkçe';
                 break;
               default:
                 text = 'Uzbek';

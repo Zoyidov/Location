@@ -41,4 +41,10 @@ class AddressProvider extends ChangeNotifier {
     await DatabaseHelper.deleteAllAddresses();
     await loadAddresses();
   }
+
+  Future<void> updateAddress(Address updatedAddress) async {
+    await DatabaseHelper.updateAddress(updatedAddress);
+    await loadAddresses();
+  }
+
 }

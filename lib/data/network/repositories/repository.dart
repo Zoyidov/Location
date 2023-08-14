@@ -48,4 +48,14 @@ class DatabaseHelper {
     final db = _database;
     await db.delete('addresses');
   }
+
+  static Future<void> updateAddress(Address updatedAddress) async {
+    final db =  _database;
+    await db.update(
+      'addresses',
+      updatedAddress.toJson(),
+      where: 'id = ?',
+      whereArgs: [updatedAddress.id],
+    );
+  }
 }
